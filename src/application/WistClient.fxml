@@ -6,11 +6,12 @@
 <?import javafx.scene.control.Tab?>
 <?import javafx.scene.control.TabPane?>
 <?import javafx.scene.control.TextField?>
+<?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.text.Font?>
 
-<TabPane fx:id="tabPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="720.0" prefWidth="1024.0" tabClosingPolicy="UNAVAILABLE" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="application.Client">
+<TabPane fx:id="tabPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="800.0" prefWidth="1280.0" tabClosingPolicy="UNAVAILABLE" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="application.Client">
    <tabs>
       <Tab text="Connect to server">
          <content>
@@ -18,7 +19,7 @@
                <children>
                   <TextField fx:id="playerNameField" layoutX="338.0" layoutY="174.0" prefHeight="25.0" prefWidth="249.0" />
                   <TextField fx:id="serverIPField" layoutX="340.0" layoutY="273.0" prefHeight="25.0" prefWidth="248.0" />
-                  <Button fx:id="connectButton" disable="true" layoutX="457.0" layoutY="384.0" mnemonicParsing="false" prefHeight="52.0" prefWidth="111.0" text="Connect">
+                  <Button fx:id="connectButton" layoutX="457.0" layoutY="384.0" mnemonicParsing="false" onMouseClicked="#connectButtonClicked" prefHeight="52.0" prefWidth="111.0" text="Connect">
                      <font>
                         <Font name="Lucida Fax Regular" size="14.0" />
                      </font>
@@ -39,11 +40,111 @@
       </Tab>
       <Tab text="Match">
          <content>
-            <SplitPane dividerPositions="0.3342981186685962, 0.6671490593342981" orientation="VERTICAL" prefHeight="200.0" prefWidth="160.0">
+            <SplitPane fx:id="splitPane" dividerPositions="0.27496757457846954, 0.5745784695201037, 0.6277561608300908, 0.682230869001297" orientation="VERTICAL" prefHeight="200.0" prefWidth="160.0" style="-fx-background-color: #4286f4;">
                <items>
-                  <HBox fx:id="enemyCardBox" prefHeight="231.0" prefWidth="1024.0" />
-                  <HBox fx:id="placedCardBox" prefHeight="232.0" prefWidth="1024.0" />
-                  <HBox fx:id="cardBox" alignment="CENTER" prefHeight="239.0" prefWidth="1024.0" spacing="8.0" />
+                  <HBox fx:id="enemyCardBox" alignment="CENTER" prefHeight="231.0" prefWidth="1024.0" />
+                  <HBox fx:id="placedCardBox" alignment="CENTER" prefHeight="232.0" prefWidth="1024.0" />
+                  <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0">
+                     <children>
+                        <Label text="Phase: " textFill="WHITE">
+                           <font>
+                              <Font name="Lucida Fax Regular" size="14.0" />
+                           </font>
+                        </Label>
+                        <Label fx:id="phaseLabel" text="-" textFill="WHITE">
+                           <font>
+                              <Font name="Lucida Fax Regular" size="14.0" />
+                           </font>
+                        </Label>
+                        <ImageView fitHeight="24.0" fitWidth="45.0" pickOnBounds="true" preserveRatio="true" />
+                        <Label text="Turn: " textFill="WHITE">
+                           <font>
+                              <Font name="Lucida Fax Regular" size="14.0" />
+                           </font></Label>
+                        <Label fx:id="turnLabel" text="-" textFill="WHITE">
+                           <font>
+                              <Font name="Lucida Fax Regular" size="14.0" />
+                           </font></Label>
+                        <ImageView fitHeight="24.0" fitWidth="45.0" pickOnBounds="true" preserveRatio="true" />
+                        <Label text="Number of cards in this round: " textFill="WHITE">
+                           <font>
+                              <Font name="Lucida Fax Regular" size="14.0" />
+                           </font>
+                        </Label>
+                        <Label fx:id="numberOfCardsLabel" text="-" textFill="WHITE">
+                           <font>
+                              <Font name="Lucida Fax Regular" size="14.0" />
+                           </font>
+                        </Label>
+                        <ImageView fitHeight="24.0" fitWidth="45.0" pickOnBounds="true" preserveRatio="true" />
+                        <Label text="Dealer: " textFill="WHITE">
+                           <font>
+                              <Font name="Lucida Fax Regular" size="14.0" />
+                           </font>
+                        </Label>
+                        <Label fx:id="dealerLabel" text="-" textFill="WHITE">
+                           <font>
+                              <Font name="Lucida Fax Regular" size="14.0" />
+                           </font>
+                        </Label>
+                        <ImageView fitHeight="24.0" fitWidth="45.0" pickOnBounds="true" preserveRatio="true" />
+                        <Label text="Answer: " textFill="WHITE">
+                           <font>
+                              <Font name="Lucida Fax Regular" size="14.0" />
+                           </font></Label>
+                        <TextField fx:id="answerField" onKeyPressed="#answerFieldEnterPressed" prefHeight="25.0" prefWidth="65.0" />
+                     </children>
+                  </HBox>
+                  <HBox alignment="CENTER" prefHeight="0.0" prefWidth="1024.0">
+                     <children>
+                        <Label text=" Name: " textFill="WHITE">
+                           <font>
+                              <Font name="Lucida Fax Regular" size="14.0" />
+                           </font></Label>
+                        <Label fx:id="playerNameLabel" text="-" textFill="WHITE">
+                           <font>
+                              <Font name="Lucida Fax Regular" size="14.0" />
+                           </font></Label>
+                        <ImageView fitHeight="24.0" fitWidth="45.0" pickOnBounds="true" preserveRatio="true" />
+                        <Label text="Score: " textFill="WHITE">
+                           <font>
+                              <Font name="Lucida Fax Regular" size="14.0" />
+                           </font></Label>
+                        <Label fx:id="playerScoreLabel" text="-" textFill="WHITE">
+                           <font>
+                              <Font name="Lucida Fax Regular" size="14.0" />
+                           </font></Label>
+                        <ImageView fitHeight="24.0" fitWidth="45.0" pickOnBounds="true" preserveRatio="true" />
+                        <Label text="Streak: " textFill="WHITE">
+                           <font>
+                              <Font name="Lucida Fax Regular" size="14.0" />
+                           </font></Label>
+                        <Label fx:id="playerStreakLabel" text="-" textFill="WHITE">
+                           <font>
+                              <Font name="Lucida Fax Regular" size="14.0" />
+                           </font></Label>
+                        <ImageView fitHeight="24.0" fitWidth="45.0" pickOnBounds="true" preserveRatio="true" />
+                        <Label text="Prediction: " textFill="WHITE">
+                           <font>
+                              <Font name="Lucida Fax Regular" size="14.0" />
+                           </font></Label>
+                        <Label fx:id="playerPredictionLabel" text="-" textFill="WHITE">
+                           <font>
+                              <Font name="Lucida Fax Regular" size="14.0" />
+                           </font></Label>
+                        <ImageView fitHeight="24.0" fitWidth="45.0" pickOnBounds="true" preserveRatio="true" />
+                        <Label text="Won: " textFill="WHITE">
+                           <font>
+                              <Font name="Lucida Fax Regular" size="14.0" />
+                           </font></Label>
+                        <Label fx:id="playerWonLabel" text="-" textFill="WHITE">
+                           <font>
+                              <Font name="Lucida Fax Regular" size="14.0" />
+                           </font></Label>
+                        <ImageView fitHeight="24.0" fitWidth="45.0" pickOnBounds="true" preserveRatio="true" />
+                     </children>
+                  </HBox>
+                  <HBox fx:id="cardBox" alignment="CENTER" prefHeight="229.0" prefWidth="1280.0" spacing="8.0" />
                </items>
             </SplitPane>
          </content>

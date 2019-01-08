@@ -1,5 +1,7 @@
 package application;
 
+import java.io.IOException;
+
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.stage.Stage;
@@ -10,9 +12,22 @@ public class Main extends Application {
     @Override
     public void start(Stage primaryStage) {
 	try {
-	    Parent root = FXMLLoader.load(getClass().getResource("WistClient.fxml"));
+	    FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("WistClient.fxml"));
+	    Parent root = fxmlLoader.load();
 	    Scene scene = new Scene(root);
+	    Client client = (Client) fxmlLoader.getController();
+	    client.setStage(primaryStage);
 	    primaryStage.setScene(scene);
+	    primaryStage.setOnCloseRequest(e -> {
+		try {
+		    client.closeConnection();
+		} catch (IOException e1) {
+		    e1.printStackTrace();
+		} catch (NullPointerException nullPointerException) {
+
+		}
+		// primaryStage.close();
+	    });
 	    primaryStage.show();
 	} catch (Exception e) {
 	    e.printStackTrace();
