@@ -5,6 +5,7 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.InetAddress;
 import java.net.Socket;
+import java.net.SocketException;
 import java.net.UnknownHostException;
 
 import javafx.application.Platform;
@@ -55,46 +56,45 @@ public class Client extends Controller {
 
     @FXML
     protected void answerFieldEnterPressed(KeyEvent ke) {
-	if (ke.getCode() == KeyCode.ENTER) {
+	try {
+	    if (ke.getCode() == KeyCode.ENTER) {
 
-	    if (cp.isPredictionPhase()) {
-		if (answerField.getText().matches("[0-8]")) {
-		    Integer ans = Integer.parseInt(answerField.getText());
-		    answerField.clear();
-		    if (playerIndex == cp.getDealerNumber()) {
-			int sum = 0;
-			for (int i = 0; i < cp.getPredictions().size(); i++) {
-			    if (i != playerIndex) {
-				sum += cp.getPredictions().get(i);
+		if (cp.isPredictionPhase()) {
+		    if (answerField.getText().matches("[0-8]")) {
+			Integer ans = Integer.parseInt(answerField.getText());
+			answerField.clear();
+			if(cp.getNumberOfCards() < ans) {
+			    alert("Your prediction must be a number between 0 and your number of cards.");
+			    return;
+			}
+			if (playerIndex == cp.getDealerNumber()) {
+			    int sum = 0;
+			    for (int i = 0; i < cp.getPredictions().size(); i++) {
+				if (i != playerIndex) {
+				    sum += cp.getPredictions().get(i);
+				}
+			    }
+			    if (sum <= cp.getNumberOfCards()) {
+				if (ans == cp.getNumberOfCards() - sum) {
+				    alert("The predictions' sum cannot be equal to the number of cards in the round.");
+				    return;
+				}
 			    }
 			}
-			if (sum <= cp.getNumberOfCards()) {
-			    if (ans == cp.getNumberOfCards() - sum) {
-				alert("The predictions' sum cannot be equal to the number of cards in the round.");
-				return;
-			    }
-			}
-		    }
-		    try {
 			output.writeObject(ans);
 			output.flush();
-		    } catch (IOException e) {
-			e.printStackTrace();
+		    } else {
+			alert("Your prediction must be a number between 0 and your number of cards.");
+			answerField.clear();
 		    }
-		} else {
-		    alert("Your prediction must be a number between 0 and your number of cards.");
+		} else if (cp.isWaitingPhase()) {
 		    answerField.clear();
-		}
-
-	    } else if (cp.isWaitingPhase()) {
-		answerField.clear();
-		try {
 		    output.writeObject(new Integer(1));
 		    output.flush();
-		} catch (IOException e) {
-		    e.printStackTrace();
 		}
 	    }
+	} catch (IOException e) {
+	    e.printStackTrace();
 	}
     }
 
@@ -146,11 +146,16 @@ public class Client extends Controller {
 		    }
 		} catch (IOException | ClassNotFoundException e) {
 		    e.printStackTrace();
+		} catch (Exception e) {
+
 		} finally {
+
 		    try {
 			closeConnection();
 		    } catch (IOException e) {
 			e.printStackTrace();
+		    } catch (Exception e) {
+
 		    }
 		}
 
@@ -202,8 +207,8 @@ public class Client extends Controller {
 
     protected void setDealerColor(ClientPackage clientPackage) {
 	if (playerIndex == clientPackage.getDealerNumber()) {
-	    cardBox.setBackground(new Background(new BackgroundFill(new Color(173.0 / 255, 113.0 / 255, 214.0 / 255, 0.6),
-		    CornerRadii.EMPTY, Insets.EMPTY)));
+	    cardBox.setBackground(new Background(new BackgroundFill(
+		    new Color(173.0 / 255, 113.0 / 255, 214.0 / 255, 0.6), CornerRadii.EMPTY, Insets.EMPTY)));
 	} else {
 	    cardBox.setBackground(splitPane.getBackground());
 	}
@@ -211,8 +216,8 @@ public class Client extends Controller {
 
     protected void setTurnColor(ClientPackage clientPackage) {
 	if (playerIndex == clientPackage.getTurn()) {
-	    cardBox.setBackground(new Background(new BackgroundFill(new Color(112.0 / 255, 211.0 / 255, 163.0 / 255, 0.6),
-		    CornerRadii.EMPTY, Insets.EMPTY)));
+	    cardBox.setBackground(new Background(new BackgroundFill(
+		    new Color(112.0 / 255, 211.0 / 255, 163.0 / 255, 0.6), CornerRadii.EMPTY, Insets.EMPTY)));
 	}
     }
 
@@ -279,4 +284,6 @@ public class Client extends Controller {
 	output.close();
 	connection.close();
     }
+
+    // TODO: Check prediction bounds
 }

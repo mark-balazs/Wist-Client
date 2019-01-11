@@ -154,6 +154,15 @@ public class Controller {
 	    Card card = new Card(p.getKey(), p.getValue());
 	    placedCardBox.getChildren().add(card);
 	}
+	
+	if(clientPackage.getMinorRoundWinner() != -1) {
+	    Text text = new Text();
+	    text.setText("    Winner of the hand: " + clientPackage.getPlayerNames().get(clientPackage.getMinorRoundWinner()));
+	    text.setFont(Font.font("Lucida Fax", 14));
+	    text.setFill(Color.WHITE);
+	    placedCardBox.getChildren().add(text);
+	}
+	
     }
 
     protected void printLabels(ClientPackage clientPackage) {
