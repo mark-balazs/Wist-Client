@@ -32,6 +32,9 @@ import javafx.scene.text.Text;
 import javafx.util.Pair;
 
 public class Client extends Controller {
+    /**
+     * Contains the UI's client part of the controller
+     * */
     protected Socket connection;
     protected ObjectInputStream input;
     protected ObjectOutputStream output;
@@ -40,6 +43,10 @@ public class Client extends Controller {
 
     @FXML
     protected void connectButtonClicked(MouseEvent me) {
+	/**
+	     * "Connect" button's "Mouse Clicked" event handler
+	     * Checks the validity of the contents, then attempts to connect
+	     * */
 	if (playerNameField.getText().length() < 1 || serverIPField.getText().length() < 1) {
 	    alert("Invalid inputs");
 	    playerNameField.clear();
@@ -56,37 +63,14 @@ public class Client extends Controller {
 
     @FXML
     protected void answerFieldEnterPressed(KeyEvent ke) {
+	/**
+	     * "Answer" textfield's "Key Pressed" event handler
+	     * */
 	try {
 	    if (ke.getCode() == KeyCode.ENTER) {
 
 		if (cp.isPredictionPhase()) {
-		    if (answerField.getText().matches("[0-8]")) {
-			Integer ans = Integer.parseInt(answerField.getText());
-			answerField.clear();
-			if(cp.getNumberOfCards() < ans) {
-			    alert("Your prediction must be a number between 0 and your number of cards.");
-			    return;
-			}
-			if (playerIndex == cp.getDealerNumber()) {
-			    int sum = 0;
-			    for (int i = 0; i < cp.getPredictions().size(); i++) {
-				if (i != playerIndex) {
-				    sum += cp.getPredictions().get(i);
-				}
-			    }
-			    if (sum <= cp.getNumberOfCards()) {
-				if (ans == cp.getNumberOfCards() - sum) {
-				    alert("The predictions' sum cannot be equal to the number of cards in the round.");
-				    return;
-				}
-			    }
-			}
-			output.writeObject(ans);
-			output.flush();
-		    } else {
-			alert("Your prediction must be a number between 0 and your number of cards.");
-			answerField.clear();
-		    }
+		    answerInPredictionPhase();
 		} else if (cp.isWaitingPhase()) {
 		    answerField.clear();
 		    output.writeObject(new Integer(1));
@@ -96,6 +80,39 @@ public class Client extends Controller {
 	} catch (IOException e) {
 	    e.printStackTrace();
 	}
+    }
+    
+    protected void answerInPredictionPhase() throws IOException {
+	/**
+	 * Checks the validity of the answer field's input then sends it to the server
+	 * */
+	if (answerField.getText().matches("[0-8]")) {
+		Integer ans = Integer.parseInt(answerField.getText());
+		answerField.clear();
+		if(cp.getNumberOfCards() < ans) {
+		    alert("Your prediction must be a number between 0 and your number of cards.");
+		    return;
+		}
+		if (playerIndex == cp.getDealerNumber()) {
+		    int sum = 0;
+		    for (int i = 0; i < cp.getPredictions().size(); i++) {
+			if (i != playerIndex) {
+			    sum += cp.getPredictions().get(i);
+			}
+		    }
+		    if (sum <= cp.getNumberOfCards()) {
+			if (ans == cp.getNumberOfCards() - sum) {
+			    alert("The predictions' sum cannot be equal to the number of cards in the round.");
+			    return;
+			}
+		    }
+		}
+		output.writeObject(ans);
+		output.flush();
+	    } else {
+		alert("Your prediction must be a number between 0 and your number of cards.");
+		answerField.clear();
+	    }
     }
 
     protected void startRunning() {
@@ -110,10 +127,16 @@ public class Client extends Controller {
     }
 
     protected void connectToServer() throws UnknownHostException, IOException {
+	/**
+	 * Attempts to conenct to the server's socket
+	 * */
 	connection = new Socket(InetAddress.getByName(serverIp), 4444);
     }
 
     protected void sendName() {
+	/**
+	 * Sends the player's name to the server
+	 * */
 	try {
 	    output.writeObject(playerName);
 	    output.flush();
@@ -123,12 +146,16 @@ public class Client extends Controller {
     }
 
     protected void setupStreams() throws IOException {
+	
 	input = new ObjectInputStream(connection.getInputStream());
 	output = new ObjectOutputStream(connection.getOutputStream());
 	output.flush();
     }
 
     protected void createInputThread() {
+	/**
+	 * Creates a thread which is responsible for receiving packages from the server
+	 * */
 	Thread thread = new Thread(new Runnable() {
 
 	    @Override
@@ -166,6 +193,9 @@ public class Client extends Controller {
     }
 
     protected void printInfo(ClientPackage clientPackage) {
+	/**
+	 * Visualizes the information about the game state
+	 * */
 	cp = clientPackage;
 	Platform.runLater(new Runnable() {
 
@@ -189,6 +219,9 @@ public class Client extends Controller {
     }
 
     protected void printWinners(ClientPackage clientPackage) {
+	/**
+	 * Visualizes the winners at the end of the match
+	 * */
 	placedCardBox.getChildren().clear();
 	ListView<String> listView = new ListView<>();
 	for (String s : clientPackage.getWinners()) {
@@ -206,6 +239,9 @@ public class Client extends Controller {
     }
 
     protected void setDealerColor(ClientPackage clientPackage) {
+	/**
+	 * Highloghts the dealer
+	 * */
 	if (playerIndex == clientPackage.getDealerNumber()) {
 	    cardBox.setBackground(new Background(new BackgroundFill(
 		    new Color(173.0 / 255, 113.0 / 255, 214.0 / 255, 0.6), CornerRadii.EMPTY, Insets.EMPTY)));
@@ -215,6 +251,9 @@ public class Client extends Controller {
     }
 
     protected void setTurnColor(ClientPackage clientPackage) {
+	/**
+	 * Highlights the player on turn
+	 * */
 	if (playerIndex == clientPackage.getTurn()) {
 	    cardBox.setBackground(new Background(new BackgroundFill(
 		    new Color(112.0 / 255, 211.0 / 255, 163.0 / 255, 0.6), CornerRadii.EMPTY, Insets.EMPTY)));
@@ -222,6 +261,9 @@ public class Client extends Controller {
     }
 
     protected void printOwnCardBox(ClientPackage clientPackage) {
+	/**
+	 * Visualizes the player's cards
+	 * */
 	cardBox.getChildren().clear();
 	if (clientPackage.getNumberOfCards() == 1) {
 	    if (!clientPackage.isWaitingPhase()) {
@@ -280,10 +322,12 @@ public class Client extends Controller {
     }
 
     public void closeConnection() throws IOException {
+	/**
+	 * Closes the streams and the socket
+	 * */
 	input.close();
 	output.close();
 	connection.close();
     }
 
-    // TODO: Check prediction bounds
 }

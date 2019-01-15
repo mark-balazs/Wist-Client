@@ -28,6 +28,9 @@ import javafx.stage.Stage;
 import javafx.util.Pair;
 
 public class Controller {
+    /**
+     * Contains the UI's non-client part of the controller
+     */
     @FXML
     protected TextField playerNameField;
     @FXML
@@ -75,6 +78,9 @@ public class Controller {
     protected Stage stage;
 
     protected void alert(final String message) {
+	/**
+	 * Creates a message box
+	 */
 	Platform.runLater(new Runnable() {
 
 	    @Override
@@ -96,6 +102,9 @@ public class Controller {
     }
 
     protected void printEnemyCardBox(ClientPackage clientPackage) {
+	/**
+	 * Visualizes the opponents
+	 */
 	enemyCardBox.getChildren().clear();
 	if (clientPackage.getNumberOfCards() == 1 && !clientPackage.getEnemyCards().isEmpty()
 		&& clientPackage.isPredictionPhase()) {
@@ -148,35 +157,43 @@ public class Controller {
     }
 
     protected void printPlacedCardBox(ClientPackage clientPackage) {
+	/**
+	 * Visualizes the cards already placed
+	 */
 	placedCardBox.getChildren().clear();
 
 	for (Pair<Integer, Integer> p : clientPackage.getPlayedCards()) {
 	    Card card = new Card(p.getKey(), p.getValue());
 	    placedCardBox.getChildren().add(card);
 	}
-	
-	if(clientPackage.getMinorRoundWinner() != -1) {
+
+	if (clientPackage.getMinorRoundWinner() != -1) {
 	    Text text = new Text();
-	    text.setText("    Winner of the hand: " + clientPackage.getPlayerNames().get(clientPackage.getMinorRoundWinner()));
+	    text.setText("    Winner of the hand: "
+		    + clientPackage.getPlayerNames().get(clientPackage.getMinorRoundWinner()));
 	    text.setFont(Font.font("Lucida Fax", 14));
 	    text.setFill(Color.WHITE);
 	    placedCardBox.getChildren().add(text);
 	}
-	
+
     }
 
     protected void printLabels(ClientPackage clientPackage) {
+	/**
+	 * Visualizes the labels containing information about the match
+	 */
 	String cssLayout = "-fx-border-color: white;\n" + "-fx-border-width: 1;\n";
 	playerNameLabel.setText(playerName);
 	playerScoreLabel.setText("" + clientPackage.getPlayerScores().get(playerIndex));
 	playerStreakLabel.setText("" + clientPackage.getPlayerStreaks().get(playerIndex));
 	playerPredictionLabel.setText("" + clientPackage.getPredictions().get(playerIndex));
 	playerWonLabel.setText("" + clientPackage.getWon().get(playerIndex));
-	dealerLabel.setBackground(new Background(new BackgroundFill(
-		    new Color(173.0 / 255, 113.0 / 255, 214.0 / 255, 0.6), CornerRadii.EMPTY, Insets.EMPTY)));
+	dealerLabel
+		.setBackground(new Background(new BackgroundFill(new Color(173.0 / 255, 113.0 / 255, 214.0 / 255, 0.6),
+			CornerRadii.EMPTY, Insets.EMPTY)));
 	dealerLabel.setText(clientPackage.getPlayerNames().get(clientPackage.getDealerNumber()));
-	turnLabel.setBackground(new Background(new BackgroundFill(
-		    new Color(112.0 / 255, 211.0 / 255, 163.0 / 255, 0.6), CornerRadii.EMPTY, Insets.EMPTY)));
+	turnLabel.setBackground(new Background(new BackgroundFill(new Color(112.0 / 255, 211.0 / 255, 163.0 / 255, 0.6),
+		CornerRadii.EMPTY, Insets.EMPTY)));
 	turnLabel.setText(clientPackage.getPlayerNames().get(clientPackage.getTurn()));
 	turnLabel.setStyle(cssLayout);
 	dealerLabel.setStyle(cssLayout);

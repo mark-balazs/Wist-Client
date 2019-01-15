@@ -8,6 +8,9 @@ import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 
 public class Enemy extends VBox {
+    /**
+     * Contains information about an opponent
+     * */
     protected int streak;
     protected int score;
     protected String name;

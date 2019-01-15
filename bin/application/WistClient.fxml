@@ -17,19 +17,19 @@
          <content>
             <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0" style="-fx-background-color: #4d4dff;">
                <children>
-                  <TextField fx:id="playerNameField" layoutX="338.0" layoutY="174.0" prefHeight="25.0" prefWidth="249.0" />
-                  <TextField fx:id="serverIPField" layoutX="340.0" layoutY="273.0" prefHeight="25.0" prefWidth="248.0" />
-                  <Button fx:id="connectButton" layoutX="457.0" layoutY="384.0" mnemonicParsing="false" onMouseClicked="#connectButtonClicked" prefHeight="52.0" prefWidth="111.0" text="Connect">
+                  <TextField fx:id="playerNameField" layoutX="522.0" layoutY="273.0" prefHeight="25.0" prefWidth="249.0" />
+                  <TextField fx:id="serverIPField" layoutX="522.0" layoutY="361.0" prefHeight="25.0" prefWidth="248.0" />
+                  <Button fx:id="connectButton" layoutX="591.0" layoutY="493.0" mnemonicParsing="false" onMouseClicked="#connectButtonClicked" prefHeight="52.0" prefWidth="111.0" text="Connect">
                      <font>
                         <Font name="Lucida Fax Regular" size="14.0" />
                      </font>
                   </Button>
-                  <Label layoutX="340.0" layoutY="257.0" text="Server IP" textFill="WHITE">
+                  <Label layoutX="522.0" layoutY="345.0" text="Server IP" textFill="WHITE">
                      <font>
                         <Font name="Lucida Fax Regular" size="13.0" />
                      </font>
                   </Label>
-                  <Label layoutX="338.0" layoutY="158.0" text="Player name" textFill="WHITE">
+                  <Label layoutX="522.0" layoutY="257.0" text="Player name" textFill="WHITE">
                      <font>
                         <Font name="Lucida Fax Regular" size="13.0" />
                      </font>
